@@ -24,4 +24,18 @@ public class UsuarioService {
     public Usuario create(Usuario usuario){
         return usuarioRepository.save(usuario);
     }
+
+    public Usuario update(Long id, Usuario obj){
+        Usuario newObj = findById(id);
+        newObj.setNome(obj.getNome());
+        newObj.setEmail(obj.getEmail());
+        newObj.setSenha(obj.getSenha());
+
+        return usuarioRepository.save(newObj);
+    }
+
+    public void delete(Long id) {
+        findById(id);
+        usuarioRepository.deleteById(id);
+    }
 }
