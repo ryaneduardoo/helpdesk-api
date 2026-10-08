@@ -29,6 +29,7 @@ public class UsuarioService {
         Usuario newObj = findById(id);
         newObj.setNome(obj.getNome());
         newObj.setEmail(obj.getEmail());
+        newObj.setPerfil(obj.getPerfil());
         newObj.setSenha(obj.getSenha());
 
         return usuarioRepository.save(newObj);
