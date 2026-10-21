@@ -14,8 +14,10 @@ public class Chamado {
     private String descricao;
     private LocalDate dataCriacao;
 
+
     @Enumerated(EnumType.STRING)
     private Status status;
+    private Prioridade prioridade;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
