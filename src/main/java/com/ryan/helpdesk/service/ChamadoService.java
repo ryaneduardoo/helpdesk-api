@@ -2,8 +2,9 @@ package com.ryan.helpdesk.service;
 
 import com.ryan.helpdesk.dto.ChamadoDTO;
 import com.ryan.helpdesk.model.Chamado;
+import com.ryan.helpdesk.model.Prioridade;
+import com.ryan.helpdesk.model.Status;
 import com.ryan.helpdesk.repository.ChamadoRepository;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +17,25 @@ public class ChamadoService {
     @Autowired
     private ChamadoRepository repository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public ChamadoDTO findById(Long id){
         Chamado obj = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Chamado não encontrado"));
         return new ChamadoDTO(obj);
     }
 
-    public Chamado create(Chamado obj){
-        obj.setId(null);
-        return repository.save(obj);
+    public ChamadoDTO create(ChamadoDTO dto) {
+        Chamado novoChamado = new Chamado();
+        novoChamado.setTitulo(dto.getTitulo());
+        novoChamado.setDescricao(dto.getDescricao());
+        novoChamado.setStatus(Status.values()[dto.getStatus()]);
+        novoChamado.setPrioridade(Prioridade.values()[dto.getPrioridade()]);
+        novoChamado.setCliente(usuarioService.findById(dto.getCliente()));
+        novoChamado.setTecnico(usuarioService.findById(dto.getTecnico()));
+
+        Chamado chamadoSalvo = repository.save(novoChamado);
+        return new ChamadoDTO(chamadoSalvo);
     }
 
     public List<ChamadoDTO> findAll(){

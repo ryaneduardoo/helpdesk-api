@@ -29,7 +29,7 @@ public class ChamadoController {
         }
 
     @PostMapping
-    public ResponseEntity<Chamado> create(@RequestBody Chamado obj){
+    public ResponseEntity<ChamadoDTO> create(@RequestBody ChamadoDTO obj){
         obj = service.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
