@@ -17,8 +17,8 @@ public class ChamadoController {
     @Autowired
     private ChamadoService service;
     @GetMapping(value = "/{id}")
-    ResponseEntity<Chamado> findById(@PathVariable Long id) {
-        Chamado obj = service.findById(id);
+    ResponseEntity<ChamadoDTO> findById(@PathVariable Long id) {
+        ChamadoDTO obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 

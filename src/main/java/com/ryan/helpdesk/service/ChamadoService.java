@@ -3,6 +3,7 @@ package com.ryan.helpdesk.service;
 import com.ryan.helpdesk.dto.ChamadoDTO;
 import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.repository.ChamadoRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,9 @@ public class ChamadoService {
     @Autowired
     private ChamadoRepository repository;
 
-    public Chamado findById(Long id){
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Chamado não encontrado! ID: " + id));
+    public ChamadoDTO findById(Long id){
+        Chamado obj = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Chamado não encontrado"));
+        return new ChamadoDTO(obj);
     }
 
     public Chamado create(Chamado obj){
@@ -29,7 +31,7 @@ public class ChamadoService {
     }
 
     public Chamado update(Long id, Chamado obj){
-        Chamado entity = findById(id);
+        Chamado entity = repository.findById(id).orElseThrow();
         entity.setTitulo(obj.getTitulo());
         entity.setDescricao(obj.getDescricao());
         entity.setStatus(obj.getStatus());
