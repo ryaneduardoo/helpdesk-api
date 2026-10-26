@@ -3,6 +3,7 @@ package com.ryan.helpdesk.controller;
 import com.ryan.helpdesk.dto.ChamadoDTO;
 import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.service.ChamadoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,13 @@ public class ChamadoController {
         }
 
     @PostMapping
-    public ResponseEntity<ChamadoDTO> create(@RequestBody ChamadoDTO obj){
+    public ResponseEntity<ChamadoDTO> create(@Valid @RequestBody ChamadoDTO obj){
         obj = service.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);
     }
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ChamadoDTO> update(@PathVariable Long id, @RequestBody ChamadoDTO obj){
+    public ResponseEntity<ChamadoDTO> update(@PathVariable Long id, @Valid @RequestBody ChamadoDTO obj){
         obj = service.update(id, obj);
         return ResponseEntity.ok().body(obj);
     }
