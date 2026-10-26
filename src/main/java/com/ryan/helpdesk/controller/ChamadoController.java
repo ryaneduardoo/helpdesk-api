@@ -35,7 +35,7 @@ public class ChamadoController {
         return ResponseEntity.created(uri).body(obj);
     }
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Chamado> update(@PathVariable Long id, @RequestBody Chamado obj){
+    public ResponseEntity<ChamadoDTO> update(@PathVariable Long id, @RequestBody ChamadoDTO obj){
         obj = service.update(id, obj);
         return ResponseEntity.ok().body(obj);
     }

@@ -42,13 +42,15 @@ public class ChamadoService {
         return repository.findAll().stream().map(obj -> new ChamadoDTO(obj)).collect(Collectors.toList());
     }
 
-    public Chamado update(Long id, Chamado obj){
+    public ChamadoDTO update(Long id, ChamadoDTO obj){
         Chamado entity = repository.findById(id).orElseThrow();
         entity.setTitulo(obj.getTitulo());
         entity.setDescricao(obj.getDescricao());
-        entity.setStatus(obj.getStatus());
-        entity.setTecnico(obj.getTecnico());
-        return repository.save(entity);
+        entity.setStatus(Status.values()[obj.getStatus()]);
+        entity.setPrioridade(Prioridade.values()[obj.getPrioridade()]);
+        entity.setTecnico(usuarioService.findById(obj.getTecnico()));
+        entity.setCliente(usuarioService.findById(obj.getCliente()));
+        return new ChamadoDTO(repository.save(entity));
     }
 
     public void delete(Long id){
