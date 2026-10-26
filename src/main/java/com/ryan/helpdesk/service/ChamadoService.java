@@ -1,11 +1,13 @@
 package com.ryan.helpdesk.service;
 
+import com.ryan.helpdesk.dto.ChamadoDTO;
 import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.repository.ChamadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 
@@ -22,8 +24,8 @@ public class ChamadoService {
         return repository.save(obj);
     }
 
-    public List<Chamado> findAll(){
-        return repository.findAll();
+    public List<ChamadoDTO> findAll(){
+        return repository.findAll().stream().map(obj -> new ChamadoDTO(obj)).collect(Collectors.toList());
     }
 
     public Chamado update(Long id, Chamado obj){

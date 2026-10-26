@@ -1,5 +1,6 @@
 package com.ryan.helpdesk.controller;
 
+import com.ryan.helpdesk.dto.ChamadoDTO;
 import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.service.ChamadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class ChamadoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Chamado>> findAll(){
-        List<Chamado> list = service.findAll();
+    public ResponseEntity<List<ChamadoDTO>> findAll(){
+        List<ChamadoDTO> list = service.findAll();
         return ResponseEntity.ok().body(list);
         }
 
