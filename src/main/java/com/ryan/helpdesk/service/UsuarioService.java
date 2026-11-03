@@ -4,9 +4,11 @@ import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.repository.UsuarioRepository;
 import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -22,7 +24,15 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    private void validaPorEmail(Usuario obj){
+        Optional<Usuario> aux = usuarioRepository.findByEmail(obj.getEmail());
+            if (aux.isPresent() && !aux.get().getId().equals(obj.getId())){
+                throw new DataIntegrityViolationException("Email já cadastrado no sistema!");
+            }
+    }
+
     public Usuario create(Usuario usuario){
+        validaPorEmail(usuario);
         return usuarioRepository.save(usuario);
     }
 
