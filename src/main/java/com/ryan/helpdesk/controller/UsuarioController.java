@@ -1,5 +1,6 @@
 package com.ryan.helpdesk.controller;
 
+import com.ryan.helpdesk.dto.UsuarioDTO;
 import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,9 @@ public class UsuarioController {
         return ResponseEntity.ok(service.findAll());
     }
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Usuario> findById(@PathVariable Long id){
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
+        Usuario obj = service.findById(id);
+        return ResponseEntity.ok().body(new UsuarioDTO(obj));
     }
     @PostMapping
     public ResponseEntity<Usuario> create(@RequestBody Usuario obj){
