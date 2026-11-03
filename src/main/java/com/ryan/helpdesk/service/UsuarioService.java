@@ -2,6 +2,7 @@ package com.ryan.helpdesk.service;
 
 import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.repository.UsuarioRepository;
+import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class UsuarioService {
 
     public Usuario findById(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado!"));
     }
 
     public List<Usuario> findAll(){
