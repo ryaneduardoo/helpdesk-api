@@ -5,6 +5,7 @@ import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.model.Prioridade;
 import com.ryan.helpdesk.model.Status;
 import com.ryan.helpdesk.repository.ChamadoRepository;
+import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ChamadoService {
     private UsuarioService usuarioService;
 
     public ChamadoDTO findById(Long id){
-        Chamado obj = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Chamado não encontrado"));
+        Chamado obj = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Chamado não encontrado"));
         return new ChamadoDTO(obj);
     }
 
