@@ -1,7 +1,6 @@
 package com.ryan.helpdesk.controller;
 
 import com.ryan.helpdesk.dto.ChamadoDTO;
-import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.service.ChamadoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

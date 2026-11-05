@@ -1,11 +1,14 @@
 package com.ryan.helpdesk.model;
 
+import com.ryan.helpdesk.dto.UsuarioDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +19,12 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
+
+    public Usuario(UsuarioDTO obj) {
+        this.id = obj.getId();
+        this.nome = obj.getNome();
+        this.senha = obj.getSenha();
+        this.email = obj.getEmail();
+        this.perfil = obj.getPerfil();
+    }
 }

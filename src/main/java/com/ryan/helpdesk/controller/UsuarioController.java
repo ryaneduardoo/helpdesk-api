@@ -28,8 +28,9 @@ public class UsuarioController {
         return ResponseEntity.ok().body(new UsuarioDTO(obj));
     }
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody Usuario obj){
-        return ResponseEntity.ok(service.create(obj));
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO objDTO){
+        Usuario novoObj = service.create(new Usuario(objDTO));
+        return ResponseEntity.ok().body(new UsuarioDTO(novoObj));
     }
 
     @PutMapping(value = "/{id}")
