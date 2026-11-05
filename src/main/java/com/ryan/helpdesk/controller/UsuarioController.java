@@ -34,8 +34,10 @@ public class UsuarioController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario obj){
-        return ResponseEntity.ok(service.update(id, obj));
+    public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @RequestBody UsuarioDTO objDTO){
+        Usuario novoObj = service.update(id, new Usuario(objDTO));
+        return ResponseEntity.ok().body(new UsuarioDTO(novoObj));
+
     }
 
     @DeleteMapping(value = "/{id}")
