@@ -1,6 +1,7 @@
 package com.ryan.helpdesk.controller;
 
 import com.ryan.helpdesk.dto.ChamadoDTO;
+import com.ryan.helpdesk.model.Chamado;
 import com.ryan.helpdesk.service.ChamadoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/chamados")
@@ -17,7 +19,7 @@ public class ChamadoController {
     @Autowired
     private ChamadoService service;
     @GetMapping(value = "/{id}")
-    ResponseEntity<ChamadoDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ChamadoDTO> findById(@PathVariable Long id) {
         ChamadoDTO obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
