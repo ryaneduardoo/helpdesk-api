@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/usuarios")
@@ -15,8 +16,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService service;
     @GetMapping
-    public ResponseEntity<List<Usuario>> findAll(){
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<UsuarioDTO>> findAll(){
+        List<Usuario> list = service.findAll();
+        List<UsuarioDTO> listDTO = list.stream().map(obj -> new UsuarioDTO(obj)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDTO);
+
     }
     @GetMapping(value = "/{id}")
     public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
