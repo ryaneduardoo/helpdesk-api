@@ -1,5 +1,6 @@
 package com.ryan.helpdesk.config;
 
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-
+        String username = jwtService.getUsername(token);
     }
+
+
 }

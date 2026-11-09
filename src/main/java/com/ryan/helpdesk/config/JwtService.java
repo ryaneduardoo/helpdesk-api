@@ -23,4 +23,9 @@ public class JwtService {
                 .compact();
     }
 
+    public String getUsername(String token) {
+        return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody().getSubject();
+
+    }
+
 }
