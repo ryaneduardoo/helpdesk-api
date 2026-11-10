@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -23,6 +25,7 @@ public class Usuario implements UserDetails {
     private String nome;
     private String email;
     private String senha;
+    protected Set<Integer> perfis = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private Perfil perfil;
@@ -33,6 +36,7 @@ public class Usuario implements UserDetails {
         this.senha = obj.getSenha();
         this.email = obj.getEmail();
         this.perfil = obj.getPerfil();
+
     }
 
     @Override
@@ -69,4 +73,9 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void addPerfil(Perfil perfil) {
+        this.perfis.add(perfil.getCodigo());
+    }
+
 }
