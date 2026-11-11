@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -41,7 +42,9 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + perfil.name()));
+        return this.perfis.stream()
+                .map(x -> new SimpleGrantedAuthority("ROLE_" + Perfil.toEnum(x).name()))
+                .collect(Collectors.toList());
     }
 
     @Override

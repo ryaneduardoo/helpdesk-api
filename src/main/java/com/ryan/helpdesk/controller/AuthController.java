@@ -20,10 +20,15 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<Void> login(@RequestBody CredenciaisDTO creds){
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha());
-        Authentication auth = authenticationManager.authenticate(token);
-        String tokenJwt = jwtService.generateToken(creds.getEmail());
-        return ResponseEntity.ok().header("Authorization", "Bearer " + tokenJwt).build();
+        try {
+            UsernamePasswordAuthenticationToken token =
+                    new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha());
+            Authentication auth = authenticationManager.authenticate(token);
+            String tokenJwt = jwtService.generateToken(creds.getEmail());
+            return ResponseEntity.ok().header("Authorization", "Bearer " + tokenJwt).build();
+        } catch (Exception e) {
+            e.printStackTrace(); // <--- Isto vai cuspir o erro exato na consola do IntelliJ!
+            throw e;
+        }
     }
 }
