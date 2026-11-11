@@ -9,9 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -27,7 +29,7 @@ public class AuthController {
             String tokenJwt = jwtService.generateToken(creds.getEmail());
             return ResponseEntity.ok().header("Authorization", "Bearer " + tokenJwt).build();
         } catch (Exception e) {
-            e.printStackTrace(); // <--- Isto vai cuspir o erro exato na consola do IntelliJ!
+            e.printStackTrace();
             throw e;
         }
     }
