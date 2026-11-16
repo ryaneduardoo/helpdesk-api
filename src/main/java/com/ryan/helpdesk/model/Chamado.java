@@ -17,6 +17,8 @@ public class Chamado {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
 
     @ManyToOne
