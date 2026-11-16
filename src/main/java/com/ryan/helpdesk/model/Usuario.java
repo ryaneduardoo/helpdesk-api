@@ -11,33 +11,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @Data
 @Entity
 @NoArgsConstructor
 public class Usuario implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+
+    @Column(unique = true)
     private String email;
     private String senha;
-    protected Set<Integer> perfis = new HashSet<>();
 
-    @Enumerated(EnumType.STRING)
-    private Perfil perfil;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "PERFIS")
+    private Set<Integer> perfis = new HashSet<>();
 
     public Usuario(UsuarioDTO obj) {
         this.id = obj.getId();
         this.nome = obj.getNome();
-        this.senha = obj.getSenha();
         this.email = obj.getEmail();
-        this.perfil = obj.getPerfil();
-
+        this.senha = obj.getSenha();
+        if (obj.getPerfis() != null && !obj.getPerfis().isEmpty()) {
+            this.perfis = obj.getPerfis();
+        } else {
+            addPerfil(Perfil.CLIENTE);
+        }
     }
 
     @Override
@@ -77,8 +81,11 @@ public class Usuario implements UserDetails {
         return true;
     }
 
+    public Set<Perfil> getPerfis() {
+        return perfis.stream().map(Perfil::toEnum).collect(Collectors.toSet());
+    }
+
     public void addPerfil(Perfil perfil) {
         this.perfis.add(perfil.getCodigo());
     }
-
 }

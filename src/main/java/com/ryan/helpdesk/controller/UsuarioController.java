@@ -7,42 +7,52 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/usuarios")
 public class UsuarioController {
+
     @Autowired
     private UsuarioService service;
-    @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> findAll(){
-        List<Usuario> list = service.findAll();
-        List<UsuarioDTO> listDTO = list.stream().map(obj -> new UsuarioDTO(obj)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(listDTO);
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECNICO')")
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> findAll() {
+        List<Usuario> list = service.findAll();
+        List<UsuarioDTO> listDTO = list.stream().map(UsuarioDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDTO);
     }
+
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id){
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
         Usuario obj = service.findById(id);
         return ResponseEntity.ok().body(new UsuarioDTO(obj));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO objDTO){
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO objDTO) {
         Usuario novoObj = service.create(new Usuario(objDTO));
-        return ResponseEntity.ok().body(new UsuarioDTO(novoObj));
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(novoObj.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UsuarioDTO(novoObj));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @RequestBody UsuarioDTO objDTO){
+    public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @RequestBody UsuarioDTO objDTO) {
         Usuario novoObj = service.update(id, new Usuario(objDTO));
         return ResponseEntity.ok().body(new UsuarioDTO(novoObj));
-
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

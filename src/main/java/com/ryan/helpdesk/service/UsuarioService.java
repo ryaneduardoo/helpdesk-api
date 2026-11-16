@@ -4,7 +4,7 @@ import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.repository.UsuarioRepository;
 import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder; // <-- Importante
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     @Autowired
-    private PasswordEncoder encoder; // <-- Injetar o encoder de senha
+    private PasswordEncoder encoder;
 
     public Usuario findById(Long id) {
         Optional<Usuario> obj = repository.findById(id);
@@ -30,7 +30,7 @@ public class UsuarioService {
 
     public Usuario create(Usuario obj) {
         obj.setId(null);
-        obj.setSenha(encoder.encode(obj.getSenha())); // <-- ENCRIPTA A SENHA AQUI
+        obj.setSenha(encoder.encode(obj.getSenha()));
         return repository.save(obj);
     }
 
@@ -38,7 +38,7 @@ public class UsuarioService {
         obj.setId(id);
         Usuario oldObj = findById(id);
 
-        // Se a senha foi alterada, precisamos codificar a nova senha também
+
         if (!obj.getSenha().equals(oldObj.getSenha())) {
             obj.setSenha(encoder.encode(obj.getSenha()));
         }
