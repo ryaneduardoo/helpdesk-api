@@ -44,11 +44,12 @@ public class ChamadoService {
     }
 
     public ChamadoDTO update(Long id, ChamadoDTO obj){
-        Chamado entity = repository.findById(id).orElseThrow();
+        Chamado entity = repository.findById(id).orElseThrow(() ->
+                new ObjectNotFoundException("Chamado não encontrado! Id: " + id));
         entity.setTitulo(obj.getTitulo());
         entity.setDescricao(obj.getDescricao());
-        entity.setStatus(Status.values()[obj.getStatus()]);
-        entity.setPrioridade(Prioridade.values()[obj.getPrioridade()]);
+        entity.setStatus(Status.toEnum(obj.getStatus()));
+        entity.setPrioridade(Prioridade.toEnum(obj.getPrioridade()));
         entity.setTecnico(usuarioService.findById(obj.getTecnico()));
         entity.setCliente(usuarioService.findById(obj.getCliente()));
         return new ChamadoDTO(repository.save(entity));
