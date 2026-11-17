@@ -2,6 +2,7 @@ package com.ryan.helpdesk.service;
 
 import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.repository.UsuarioRepository;
+import com.ryan.helpdesk.service.exceptions.DataIntegrityViolationException;
 import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,5 +50,12 @@ public class UsuarioService {
     public void delete(Long id) {
         Usuario obj = findById(id);
         repository.delete(obj);
+    }
+
+    private void validaPorEmail(Usuario obj){
+      Optional<Usuario> usuarioExistente = repository.findByEmail(obj.getEmail());
+      if(usuarioExistente.isPresent() && !usuarioExistente.get().getId().equals(obj.getId())){
+          throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
+        }
     }
 }
