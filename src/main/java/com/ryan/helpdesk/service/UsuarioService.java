@@ -20,22 +20,20 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
-    private ChamadoRepository chamadoRepository;
-
     public Usuario findById(Long id) {
-        Optional<Usuario> obj = repository.findById(id);
+        Optional<Usuario> obj = repository.findByIdAndAtivoTrue(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado! Id: " + id));
     }
 
     public List<Usuario> findAll() {
-        return repository.findAll();
+        return repository.findAllByAtivoTrue();
     }
 
     public Usuario create(Usuario obj) {
         obj.setId(null);
         validaPorEmail(obj);
         obj.setSenha(encoder.encode(obj.getSenha()));
+        obj.setAtivo(true);
         return repository.save(obj);
     }
 
@@ -48,15 +46,15 @@ public class UsuarioService {
             obj.setSenha(encoder.encode(obj.getSenha()));
         }
 
+        obj.setAtivo(oldObj.getAtivo());
+
         return repository.save(obj);
     }
 
     public void delete(Long id) {
         Usuario obj = findById(id);
-        if(chamadoRepository.existsByTecnicoIdOrClienteId(id, id)){
-            throw new DataIntegrityViolationException("Usuário possui chamados vinculados e não pode ser deletado!");
-        }
-        repository.delete(obj);
+        obj.setAtivo(false);
+        repository.save(obj);
     }
 
     private void validaPorEmail(Usuario obj){
