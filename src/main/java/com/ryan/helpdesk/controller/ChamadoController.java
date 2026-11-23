@@ -11,9 +11,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasAnyRole;
 
 @RestController
 @RequestMapping(value = "/chamados")
@@ -47,7 +44,7 @@ public class ChamadoController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
