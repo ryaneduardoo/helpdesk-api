@@ -3,6 +3,7 @@ package com.ryan.helpdesk.controller;
 import com.ryan.helpdesk.dto.UsuarioDTO;
 import com.ryan.helpdesk.model.Usuario;
 import com.ryan.helpdesk.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +37,7 @@ public class UsuarioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO objDTO) {
+    public ResponseEntity<UsuarioDTO> create(@Valid @RequestBody UsuarioDTO objDTO) {
         Usuario novoObj = service.create(new Usuario(objDTO));
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(novoObj.getId()).toUri();
@@ -45,7 +46,7 @@ public class UsuarioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @RequestBody UsuarioDTO objDTO) {
+    public ResponseEntity<UsuarioDTO> update(@PathVariable Long id, @Valid @RequestBody UsuarioDTO objDTO) {
         Usuario novoObj = service.update(id, new Usuario(objDTO));
         return ResponseEntity.ok().body(new UsuarioDTO(novoObj));
     }
