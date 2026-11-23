@@ -27,6 +27,7 @@ public class Usuario implements UserDetails {
     @Column(unique = true)
     private String email;
     private String senha;
+    private Boolean ativo = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "PERFIS")
@@ -37,6 +38,7 @@ public class Usuario implements UserDetails {
         this.nome = obj.getNome();
         this.email = obj.getEmail();
         this.senha = obj.getSenha();
+        this.ativo = true;
         if (obj.getPerfis() != null && !obj.getPerfis().isEmpty()) {
             this.perfis = obj.getPerfis();
         } else {
@@ -78,7 +80,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return Boolean.TRUE.equals(this.ativo);
     }
 
     public Set<Perfil> getPerfis() {
