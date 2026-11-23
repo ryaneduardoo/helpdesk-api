@@ -30,8 +30,8 @@ public class ChamadoService {
         Chamado novoChamado = new Chamado();
         novoChamado.setTitulo(dto.getTitulo());
         novoChamado.setDescricao(dto.getDescricao());
-        novoChamado.setStatus(Status.values()[dto.getStatus()]);
-        novoChamado.setPrioridade(Prioridade.values()[dto.getPrioridade()]);
+        novoChamado.setStatus(Status.toEnum(dto.getStatus()));
+        novoChamado.setPrioridade(Prioridade.toEnum(dto.getPrioridade()));
         novoChamado.setCliente(usuarioService.findById(dto.getCliente()));
         novoChamado.setTecnico(usuarioService.findById(dto.getTecnico()));
 
