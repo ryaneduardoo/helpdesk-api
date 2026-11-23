@@ -1,14 +1,14 @@
 package com.ryan.helpdesk.service;
 
 import com.ryan.helpdesk.dto.ChamadoDTO;
-import com.ryan.helpdesk.model.Chamado;
-import com.ryan.helpdesk.model.Prioridade;
-import com.ryan.helpdesk.model.Status;
+import com.ryan.helpdesk.model.*;
 import com.ryan.helpdesk.repository.ChamadoRepository;
+import com.ryan.helpdesk.service.exceptions.DataIntegrityViolationException;
 import com.ryan.helpdesk.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,11 +30,23 @@ public class ChamadoService {
         Chamado novoChamado = new Chamado();
         novoChamado.setTitulo(dto.getTitulo());
         novoChamado.setDescricao(dto.getDescricao());
+
         novoChamado.setStatus(Status.toEnum(dto.getStatus()));
+        if (novoChamado.getStatus().equals(Status.RESOLVIDO)) {
+            novoChamado.setDataFechamento(LocalDateTime.now());
+        } else {
+            novoChamado.setDataFechamento(null);
+        }
+
         novoChamado.setPrioridade(Prioridade.toEnum(dto.getPrioridade()));
         novoChamado.setCliente(usuarioService.findById(dto.getCliente()));
-        novoChamado.setTecnico(usuarioService.findById(dto.getTecnico()));
+        Usuario tecnico = usuarioService.findById(dto.getTecnico());
+        if (!tecnico.getPerfis().contains(Perfil.TECNICO) && !tecnico.getPerfis().contains(Perfil.ADMIN)) {
+            throw new DataIntegrityViolationException("O usuário informado não possui perfil de técnico!");
+        }
+        novoChamado.setTecnico(tecnico);
 
+        novoChamado.setDataCriacao(LocalDateTime.now());
         Chamado chamadoSalvo = repository.save(novoChamado);
         return new ChamadoDTO(chamadoSalvo);
     }
@@ -46,12 +58,26 @@ public class ChamadoService {
     public ChamadoDTO update(Long id, ChamadoDTO obj){
         Chamado entity = repository.findById(id).orElseThrow(() ->
                 new ObjectNotFoundException("Chamado não encontrado! Id: " + id));
+
         entity.setTitulo(obj.getTitulo());
         entity.setDescricao(obj.getDescricao());
         entity.setStatus(Status.toEnum(obj.getStatus()));
         entity.setPrioridade(Prioridade.toEnum(obj.getPrioridade()));
-        entity.setTecnico(usuarioService.findById(obj.getTecnico()));
+
+        if (entity.getStatus().equals(Status.RESOLVIDO)) {
+            entity.setDataFechamento(LocalDateTime.now());
+        } else {
+            entity.setDataFechamento(null);
+        }
+
+        Usuario tecnico = usuarioService.findById(obj.getTecnico());
+        if (!tecnico.getPerfis().contains(Perfil.TECNICO) && !tecnico.getPerfis().contains(Perfil.ADMIN)) {
+            throw new DataIntegrityViolationException("O usuário informado não possui perfil de técnico!");
+        }
+
+        entity.setTecnico(tecnico);
         entity.setCliente(usuarioService.findById(obj.getCliente()));
+
         return new ChamadoDTO(repository.save(entity));
     }
 

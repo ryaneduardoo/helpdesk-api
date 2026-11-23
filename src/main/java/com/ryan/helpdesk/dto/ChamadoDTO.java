@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,6 +30,8 @@ public class ChamadoDTO {
     private Long cliente;
     private String nomeTecnico;
     private String nomeCliente;
+    private LocalDateTime dataCriacao;
+    private LocalDateTime dataFechamento;
 
     public ChamadoDTO(Chamado obj) {
         this.id = obj.getId();
@@ -42,6 +46,9 @@ public class ChamadoDTO {
 
         this.cliente = obj.getCliente().getId();
         this.nomeCliente = obj.getCliente().getNome();
+
+        this.dataCriacao = obj.getDataCriacao();
+        this.dataFechamento = obj.getDataFechamento();
 
     }
 }
